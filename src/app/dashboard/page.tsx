@@ -1,5 +1,5 @@
 import { auth } from "@/server/auth";
-import { getWorkspaces, getWorkspace } from "@/server/actions/workspace";
+import { getWorkspaces, getWorkspace, updateWorkspaceAccess } from "@/server/actions/workspace";
 import { redirect } from "next/navigation";
 import { Building2, Users, Calendar } from "lucide-react";
 import Link from "next/link";
@@ -37,6 +37,9 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 	if (!currentWorkspace) {
 		redirect(`/dashboard?workspace=${workspaces[0]?.id}`);
 	}
+
+	// Update the lastAccessedAt timestamp for the current workspace
+	await updateWorkspaceAccess(currentWorkspaceId);
 
 	return (
 		<div className="space-y-8">

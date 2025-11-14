@@ -4,6 +4,7 @@ import {
 	getWorkspace,
 	getWorkspaceMembers,
 	getActiveInvites,
+	updateWorkspaceAccess,
 } from "@/server/actions/workspace";
 import { redirect } from "next/navigation";
 import { db } from "@/server/db";
@@ -36,6 +37,9 @@ export default async function TeamPage({ searchParams }: PageProps) {
 	if (!currentWorkspace) {
 		redirect(`/dashboard?workspace=${workspaces[0]?.id}`);
 	}
+
+	// Update the lastAccessedAt timestamp for the current workspace
+	await updateWorkspaceAccess(currentWorkspaceId);
 
 	const members = await getWorkspaceMembers(currentWorkspaceId);
 	const invites = await getActiveInvites(currentWorkspaceId);

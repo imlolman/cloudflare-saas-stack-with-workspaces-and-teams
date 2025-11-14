@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { Home, Users, Settings } from "lucide-react";
-import { createWorkspace } from "@/server/actions/workspace";
+import { createWorkspace, updateWorkspaceAccess } from "@/server/actions/workspace";
 import { useState } from "react";
 
 interface Workspace {
@@ -25,7 +25,10 @@ export function DashboardNav({ workspaces }: DashboardNavProps) {
 	const currentWorkspaceId = searchParams.get("workspace") || workspaces[0]?.id;
 	const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false);
 
-	function handleSelectWorkspace(workspaceId: string) {
+	async function handleSelectWorkspace(workspaceId: string) {
+		// Update the lastAccessedAt timestamp
+		await updateWorkspaceAccess(workspaceId);
+		
 		const newParams = new URLSearchParams(searchParams.toString());
 		newParams.set("workspace", workspaceId);
 		router.push(`${pathname}?${newParams.toString()}`);

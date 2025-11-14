@@ -20,7 +20,12 @@ export function InvitePageClient({ token, workspaceName, userName }: InvitePageC
 		setIsAccepting(true);
 		const result = await acceptInvite(token);
 
-		if (result.success) {
+		if (result.success && result.workspaceId) {
+			// Redirect to the invited workspace
+			router.push(`/dashboard?workspace=${result.workspaceId}`);
+			router.refresh();
+		} else if (result.success) {
+			// Fallback if workspaceId is not returned for some reason
 			router.push("/dashboard");
 			router.refresh();
 		} else {

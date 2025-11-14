@@ -1,5 +1,5 @@
 import { auth } from "@/server/auth";
-import { getWorkspaces, getWorkspace } from "@/server/actions/workspace";
+import { getWorkspaces, getWorkspace, updateWorkspaceAccess } from "@/server/actions/workspace";
 import { redirect } from "next/navigation";
 import { SettingsPageClient } from "@/components/settings-page-client";
 
@@ -28,6 +28,9 @@ export default async function SettingsPage({ searchParams }: PageProps) {
 	if (!currentWorkspace) {
 		redirect(`/dashboard?workspace=${workspaces[0]?.id}`);
 	}
+
+	// Update the lastAccessedAt timestamp for the current workspace
+	await updateWorkspaceAccess(currentWorkspaceId);
 
 	const isOwner = currentWorkspace.role === "owner";
 

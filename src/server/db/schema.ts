@@ -112,6 +112,9 @@ export const workspaceMembers = sqliteTable(
 		joinedAt: integer("joinedAt", { mode: "timestamp_ms" })
 			.notNull()
 			.$defaultFn(() => new Date()),
+		lastAccessedAt: integer("lastAccessedAt", { mode: "timestamp_ms" })
+			.notNull()
+			.$defaultFn(() => new Date()),
 	},
 	(member) => ({
 		compoundKey: primaryKey({

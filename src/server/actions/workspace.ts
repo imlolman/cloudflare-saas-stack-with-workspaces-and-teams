@@ -15,6 +15,7 @@ interface CreateWorkspaceResult {
 
 interface UpdateWorkspaceResult {
 	success: boolean;
+	workspaceId?: string;
 	error?: string;
 }
 
@@ -24,7 +25,7 @@ interface InviteResult {
 	error?: string;
 }
 
-// Get all workspaces for the current user
+// Get all workspaces for the current user (ordered by most recently accessed)
 export async function getWorkspaces() {
 	const session = await auth();
 	if (!session?.user?.id) return [];
@@ -37,12 +38,15 @@ export async function getWorkspaces() {
 			ownerId: workspaces.ownerId,
 			createdAt: workspaces.createdAt,
 			role: workspaceMembers.role,
+			lastAccessedAt: workspaceMembers.lastAccessedAt,
 		})
 		.from(workspaceMembers)
 		.innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
-		.where(eq(workspaceMembers.userId, session.user.id));
+		.where(eq(workspaceMembers.userId, session.user.id))
+		.orderBy(workspaceMembers.lastAccessedAt);
 
-	return userWorkspaces;
+	// Return in descending order (most recent first)
+	return userWorkspaces.reverse();
 }
 
 // Get a single workspace by ID
@@ -111,11 +115,12 @@ export async function createWorkspace(name: string): Promise<CreateWorkspaceResu
 			return { success: false, error: "Failed to create workspace" };
 		}
 
-		// Add user as owner
+		// Add user as owner with current timestamp
 		await db.insert(workspaceMembers).values({
 			workspaceId: workspace.id,
 			userId: session.user.id,
 			role: "owner",
+			lastAccessedAt: new Date(),
 		});
 
 		revalidatePath("/dashboard");
@@ -333,24 +338,67 @@ export async function acceptInvite(token: string): Promise<UpdateWorkspaceResult
 			);
 
 		if (existingMember) {
-			return { success: false, error: "You are already a member of this workspace" };
+			// Update lastAccessedAt if already a member
+			await db
+				.update(workspaceMembers)
+				.set({ lastAccessedAt: new Date() })
+				.where(
+					and(
+						eq(workspaceMembers.workspaceId, invite.workspaceId),
+						eq(workspaceMembers.userId, session.user.id)
+					)
+				);
+			return { success: true, workspaceId: invite.workspaceId };
 		}
 
-		// Add user as member
+		// Add user as member with current timestamp as lastAccessedAt
 		await db.insert(workspaceMembers).values({
 			workspaceId: invite.workspaceId,
 			userId: session.user.id,
 			role: "member",
+			lastAccessedAt: new Date(),
 		});
 
 		// Delete the invite after use
 		await db.delete(workspaceInvites).where(eq(workspaceInvites.token, token));
 
 		revalidatePath("/dashboard");
-		return { success: true };
+		return { success: true, workspaceId: invite.workspaceId };
 	} catch (error) {
 		console.error("Error accepting invite:", error);
 		return { success: false, error: "Failed to accept invite" };
+	}
+}
+
+// Update workspace access timestamp (called when user switches to a workspace)
+export async function updateWorkspaceAccess(workspaceId: string): Promise<UpdateWorkspaceResult> {
+	const session = await auth();
+	if (!session?.user?.id) {
+		return { success: false, error: "Not authenticated" };
+	}
+
+	try {
+		// Verify user is a member of this workspace
+		const workspace = await getWorkspace(workspaceId);
+		if (!workspace) {
+			return { success: false, error: "Workspace not found or access denied" };
+		}
+
+		// Update lastAccessedAt timestamp
+		await db
+			.update(workspaceMembers)
+			.set({ lastAccessedAt: new Date() })
+			.where(
+				and(
+					eq(workspaceMembers.workspaceId, workspaceId),
+					eq(workspaceMembers.userId, session.user.id)
+				)
+			);
+
+		return { success: true };
+	} catch (error) {
+		console.error("Error updating workspace access:", error);
+		return { success: false, error: "Failed to update workspace access" };
 	}
 }
 

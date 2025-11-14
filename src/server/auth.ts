@@ -37,6 +37,7 @@ export const {
 					workspaceId: workspace.id,
 					userId: user.id,
 					role: "owner",
+					lastAccessedAt: new Date(),
 				});
 			}
 		},

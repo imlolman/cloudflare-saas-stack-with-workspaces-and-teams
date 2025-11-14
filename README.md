@@ -36,8 +36,8 @@ Supermemory now has 20k+ users and it runs on $5/month. safe to say, it's _very_
 2. Clone the repository and install dependencies:
 
    ```bash
-   git clone https://github.com/Dhravya/cloudflare-saas-stack
-   cd cloudflare-saas-stack
+   git clone https://github.com/imlolman/cloudflare-saas-stack-with-workspace
+   cd cloudflare-saas-stack-with-workspace
    npm i -g bun
    bun install
    bun run setup

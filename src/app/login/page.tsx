@@ -4,12 +4,16 @@ import { redirect } from "next/navigation";
 
 export const runtime = "edge";
 
-export default async function LoginPage() {
+interface LoginPageProps {
+	searchParams: { callbackUrl?: string };
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
 	const session = await auth();
 
-	// If already authenticated, redirect to dashboard
+	// If already authenticated, redirect to callback URL or dashboard
 	if (session?.user) {
-		redirect("/dashboard");
+		redirect(searchParams.callbackUrl || "/dashboard");
 	}
 
 	return (
@@ -46,13 +50,14 @@ export default async function LoginPage() {
 					</p>
 				</div>
 
-				<form
-					action={async () => {
-						"use server";
-						await signIn("google", { redirectTo: "/dashboard" });
-					}}
-					className="w-full"
-				>
+			<form
+				action={async () => {
+					"use server";
+					const callbackUrl = searchParams.callbackUrl || "/dashboard";
+					await signIn("google", { redirectTo: callbackUrl });
+				}}
+				className="w-full"
+			>
 					<Button className="w-full" size="lg">
 						<svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 							<path
