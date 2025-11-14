@@ -34,6 +34,7 @@ Supermemory now has 20k+ users and it runs on $5/month. safe to say, it's _very_
 1. Make sure that you have [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/#installupdate-wrangler) installed. And also that you have logged in with `wrangler login` (You'll need a Cloudflare account)
 
 2. Clone the repository and install dependencies:
+
    ```bash
    git clone https://github.com/Dhravya/cloudflare-saas-stack
    cd cloudflare-saas-stack
@@ -132,12 +133,13 @@ users → workspace_members → workspaces
 ## Cloudflare Integration
 
 Besides the `dev` script, `c3` has added extra scripts for Cloudflare Pages integration:
+
 - `pages:build`: Build the application for Pages using [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
 - `preview`: Locally preview your Pages application using [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
 - `deploy`: Deploy your Pages application using Wrangler CLI
 - `cf-typegen`: Generate typescript types for Cloudflare env.
 
-> __Note:__ While the `dev` script is optimal for local development, you should preview your Pages application periodically to ensure it works properly in the Pages environment.
+> **Note:** While the `dev` script is optimal for local development, you should preview your Pages application periodically to ensure it works properly in the Pages environment.
 
 ## Bindings
 
@@ -146,7 +148,9 @@ Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings
 For detailed instructions on setting up bindings, refer to the Cloudflare documentation.
 
 ## Database Migrations
+
 Quick explaination of D1 set up:
+
 - D1 is a serverless database that follows SQLite convention.
 - Within Cloudflare pages and workers, you can directly query d1 with [client api](https://developers.cloudflare.com/d1/build-with-d1/d1-client-api/) exposed by bindings (eg. `env.BINDING`)
 - You can also query d1 via [rest api](https://developers.cloudflare.com/api/operations/cloudflare-d1-create-database)
@@ -155,6 +159,7 @@ Quick explaination of D1 set up:
 - In dev mode (`bun run db:<migrate or studio>:dev`), Drizzle-kit (migrate and studio) directly modifies these files as regular SQlite db. While `bun run db:<migrate or studio>:prod` use d1-http driver to interact with remote d1 via rest api. Therefore we need to set env var at `.env.example`
 
 ### Generate Migration Files
+
 ```bash
 bun run db:generate
 ```
@@ -162,6 +167,7 @@ bun run db:generate
 ### Apply Database Migrations
 
 **Development (Local D1):**
+
 ```bash
 # Using Drizzle (may have issues with existing tables)
 bun run db:migrate:dev
@@ -171,6 +177,7 @@ wrangler d1 execute cloudflare-stack-test --local --file=./drizzle/0001_migratio
 ```
 
 **Production (Remote D1):**
+
 ```bash
 # Using Drizzle
 bun run db:migrate:prod
@@ -182,11 +189,13 @@ wrangler d1 execute cloudflare-stack-test --remote --file=./drizzle/0001_migrati
 ### Inspect Database
 
 **Local database:**
+
 ```bash
 bun run db:studio:dev
 ```
 
 **Remote database:**
+
 ```bash
 bun run db:studio:prod
 ```
@@ -219,22 +228,12 @@ Don't forget to add the CORS policy to the R2 bucket. The CORS policy should loo
 
 ```json
 [
-  {
-    "AllowedOrigins": [
-      "http://localhost:3000",
-      "https://your-domain.com"
-    ],
-    "AllowedMethods": [
-      "GET",
-      "PUT"
-    ],
-    "AllowedHeaders": [
-      "Content-Type"
-    ],
-    "ExposeHeaders": [
-      "ETag"
-    ]
-  }
+	{
+		"AllowedOrigins": ["http://localhost:3000", "https://your-domain.com"],
+		"AllowedMethods": ["GET", "PUT"],
+		"AllowedHeaders": ["Content-Type"],
+		"ExposeHeaders": ["ETag"]
+	}
 ]
 ```
 
@@ -259,14 +258,14 @@ If you prefer manual setup:
 
 ## 🎨 Key Pages & Routes
 
-| Route | Description | Access |
-|-------|-------------|--------|
-| `/` | Landing page | Public |
-| `/login` | Google OAuth login | Public |
-| `/dashboard` | Workspace overview | Protected |
-| `/dashboard/team` | Team member management | Protected |
-| `/dashboard/settings` | Workspace settings | Protected |
-| `/invite/[token]` | Accept workspace invitation | Protected |
+| Route                 | Description                 | Access    |
+| --------------------- | --------------------------- | --------- |
+| `/`                   | Landing page                | Public    |
+| `/login`              | Google OAuth login          | Public    |
+| `/dashboard`          | Workspace overview          | Protected |
+| `/dashboard/team`     | Team member management      | Protected |
+| `/dashboard/settings` | Workspace settings          | Protected |
+| `/invite/[token]`     | Accept workspace invitation | Protected |
 
 ## 🔐 Server Actions
 
@@ -313,4 +312,3 @@ Built on top of the amazing work by [Dhravya](https://github.com/Dhravya) and th
 ---
 
 **Ready to build your next SaaS?** Just change your Cloudflare account ID in the project settings, and you're good to go! 🚀
-

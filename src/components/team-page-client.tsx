@@ -48,8 +48,7 @@ export function TeamPageClient({
 	isOwner,
 }: TeamPageClientProps) {
 	const [isGenerating, setIsGenerating] = useState(false);
-	const baseUrl =
-		typeof window !== "undefined" ? window.location.origin : "";
+	const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
 
 	async function handleGenerateInvite() {
 		setIsGenerating(true);
@@ -64,7 +63,7 @@ export function TeamPageClient({
 	return (
 		<div className="space-y-8">
 			<div>
-				<h1 className="text-3xl font-bold mb-2">Team Management</h1>
+				<h1 className="mb-2 text-3xl font-bold">Team Management</h1>
 				<p className="text-gray-600 dark:text-gray-400">
 					Manage members and invitations for {workspace.name}
 				</p>
@@ -72,12 +71,10 @@ export function TeamPageClient({
 
 			{/* Members Section */}
 			<div>
-				<div className="flex items-center justify-between mb-4">
+				<div className="mb-4 flex items-center justify-between">
 					<div className="flex items-center gap-2">
 						<Users className="h-5 w-5" />
-						<h2 className="text-xl font-semibold">
-							Team Members ({members.length})
-						</h2>
+						<h2 className="text-xl font-semibold">Team Members ({members.length})</h2>
 					</div>
 				</div>
 
@@ -92,12 +89,10 @@ export function TeamPageClient({
 			{/* Invite Links Section */}
 			{isOwner && (
 				<div>
-					<div className="flex items-center justify-between mb-4">
+					<div className="mb-4 flex items-center justify-between">
 						<div className="flex items-center gap-2">
 							<LinkIcon className="h-5 w-5" />
-							<h2 className="text-xl font-semibold">
-								Invite Links ({invites.length})
-							</h2>
+							<h2 className="text-xl font-semibold">Invite Links ({invites.length})</h2>
 						</div>
 						<Button onClick={handleGenerateInvite} disabled={isGenerating}>
 							{isGenerating ? "Generating..." : "Generate Invite Link"}
@@ -107,19 +102,13 @@ export function TeamPageClient({
 					{invites.length > 0 ? (
 						<div className="space-y-3">
 							{invites.map((invite) => (
-								<InviteLinkCard
-									key={invite.id}
-									invite={invite}
-									baseUrl={baseUrl}
-								/>
+								<InviteLinkCard key={invite.id} invite={invite} baseUrl={baseUrl} />
 							))}
 						</div>
 					) : (
-						<div className="text-center py-8 border border-dashed rounded-lg">
-							<LinkIcon className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-							<p className="text-gray-600 dark:text-gray-400 mb-4">
-								No active invite links
-							</p>
+						<div className="rounded-lg border border-dashed py-8 text-center">
+							<LinkIcon className="mx-auto mb-2 h-12 w-12 text-gray-400" />
+							<p className="mb-4 text-gray-600 dark:text-gray-400">No active invite links</p>
 							<Button onClick={handleGenerateInvite} disabled={isGenerating}>
 								{isGenerating ? "Generating..." : "Create Your First Invite"}
 							</Button>
@@ -129,7 +118,7 @@ export function TeamPageClient({
 			)}
 
 			{!isOwner && (
-				<div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
+				<div className="rounded-lg border bg-gray-50 p-4 dark:bg-gray-900">
 					<p className="text-sm text-gray-600 dark:text-gray-400">
 						Only workspace owners can generate invite links and remove members.
 					</p>
@@ -138,4 +127,3 @@ export function TeamPageClient({
 		</div>
 	);
 }
-

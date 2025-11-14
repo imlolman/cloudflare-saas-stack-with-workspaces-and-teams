@@ -34,17 +34,14 @@ export default async function InvitePage({ params }: PageProps) {
 
 	if (!invite) {
 		return (
-			<div className="flex flex-col items-center justify-center min-h-screen">
-				<div className="text-center max-w-md">
-					<div className="text-6xl mb-4">❌</div>
-					<h1 className="text-2xl font-bold mb-2">Invalid Invite</h1>
-					<p className="text-gray-600 dark:text-gray-400 mb-6">
+			<div className="flex min-h-screen flex-col items-center justify-center">
+				<div className="max-w-md text-center">
+					<div className="mb-4 text-6xl">❌</div>
+					<h1 className="mb-2 text-2xl font-bold">Invalid Invite</h1>
+					<p className="mb-6 text-gray-600 dark:text-gray-400">
 						This invite link is invalid or has been revoked.
 					</p>
-					<a
-						href="/dashboard"
-						className="text-blue-600 hover:underline"
-					>
+					<a href="/dashboard" className="text-blue-600 hover:underline">
 						Go to Dashboard
 					</a>
 				</div>
@@ -56,18 +53,14 @@ export default async function InvitePage({ params }: PageProps) {
 
 	if (isExpired) {
 		return (
-			<div className="flex flex-col items-center justify-center min-h-screen">
-				<div className="text-center max-w-md">
-					<div className="text-6xl mb-4">⏰</div>
-					<h1 className="text-2xl font-bold mb-2">Invite Expired</h1>
-					<p className="text-gray-600 dark:text-gray-400 mb-6">
-						This invite link has expired. Please request a new invite from the
-						workspace owner.
+			<div className="flex min-h-screen flex-col items-center justify-center">
+				<div className="max-w-md text-center">
+					<div className="mb-4 text-6xl">⏰</div>
+					<h1 className="mb-2 text-2xl font-bold">Invite Expired</h1>
+					<p className="mb-6 text-gray-600 dark:text-gray-400">
+						This invite link has expired. Please request a new invite from the workspace owner.
 					</p>
-					<a
-						href="/dashboard"
-						className="text-blue-600 hover:underline"
-					>
+					<a href="/dashboard" className="text-blue-600 hover:underline">
 						Go to Dashboard
 					</a>
 				</div>
@@ -83,4 +76,3 @@ export default async function InvitePage({ params }: PageProps) {
 		/>
 	);
 }
-

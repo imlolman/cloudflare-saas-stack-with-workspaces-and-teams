@@ -13,22 +13,23 @@ export const {
 } = NextAuth({
 	trustHost: true,
 	adapter: DrizzleAdapter(db),
-	providers: [
-		Google
-	],
+	providers: [Google],
 	events: {
 		createUser: async ({ user }) => {
 			if (!user.id || !user.name) return;
 
 			// Create a default workspace for the new user
 			const workspaceName = `${user.name}'s Workspace`;
-			const workspaceSlug = `${user.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${user.id.slice(0, 8)}`;
+			const workspaceSlug = `${user.name.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${user.id.slice(0, 8)}`;
 
-			const [workspace] = await db.insert(workspaces).values({
-				name: workspaceName,
-				slug: workspaceSlug,
-				ownerId: user.id,
-			}).returning();
+			const [workspace] = await db
+				.insert(workspaces)
+				.values({
+					name: workspaceName,
+					slug: workspaceSlug,
+					ownerId: user.id,
+				})
+				.returning();
 
 			// Add user as owner to the workspace
 			if (workspace) {

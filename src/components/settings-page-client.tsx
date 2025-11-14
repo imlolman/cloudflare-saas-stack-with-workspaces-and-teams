@@ -2,11 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/confirm-dialog";
-import {
-	updateWorkspace,
-	deleteWorkspace,
-	leaveWorkspace,
-} from "@/server/actions/workspace";
+import { updateWorkspace, deleteWorkspace, leaveWorkspace } from "@/server/actions/workspace";
 import { Settings, Trash2, LogOut, Save } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -85,25 +81,20 @@ export function SettingsPageClient({
 	return (
 		<div className="space-y-8">
 			<div>
-				<h1 className="text-3xl font-bold mb-2">Workspace Settings</h1>
-				<p className="text-gray-600 dark:text-gray-400">
-					Manage settings for {workspace.name}
-				</p>
+				<h1 className="mb-2 text-3xl font-bold">Workspace Settings</h1>
+				<p className="text-gray-600 dark:text-gray-400">Manage settings for {workspace.name}</p>
 			</div>
 
 			{/* General Settings */}
-			<div className="border rounded-lg p-6">
-				<div className="flex items-center gap-2 mb-4">
+			<div className="rounded-lg border p-6">
+				<div className="mb-4 flex items-center gap-2">
 					<Settings className="h-5 w-5" />
 					<h2 className="text-xl font-semibold">General</h2>
 				</div>
 
 				<form onSubmit={handleUpdateWorkspace} className="space-y-4">
 					<div>
-						<label
-							htmlFor="workspace-name"
-							className="block text-sm font-medium mb-2"
-						>
+						<label htmlFor="workspace-name" className="mb-2 block text-sm font-medium">
 							Workspace Name
 						</label>
 						<input
@@ -112,11 +103,9 @@ export function SettingsPageClient({
 							value={workspaceName}
 							onChange={(e) => setWorkspaceName(e.target.value)}
 							disabled={!isOwner}
-							className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-950"
+							className="w-full rounded-lg border bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-950"
 						/>
-						<p className="text-sm text-gray-500 mt-1">
-							Slug: {workspace.slug}
-						</p>
+						<p className="mt-1 text-sm text-gray-500">Slug: {workspace.slug}</p>
 					</div>
 
 					{isOwner && (
@@ -135,19 +124,16 @@ export function SettingsPageClient({
 			</div>
 
 			{/* Danger Zone */}
-			<div className="border border-red-200 dark:border-red-800 rounded-lg p-6">
-				<h2 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-4">
-					Danger Zone
-				</h2>
+			<div className="rounded-lg border border-red-200 p-6 dark:border-red-800">
+				<h2 className="mb-4 text-xl font-semibold text-red-600 dark:text-red-400">Danger Zone</h2>
 
 				<div className="space-y-4">
 					{isOwner ? (
-						<div className="flex items-center justify-between p-4 border border-red-200 dark:border-red-800 rounded-lg">
+						<div className="flex items-center justify-between rounded-lg border border-red-200 p-4 dark:border-red-800">
 							<div>
-								<h3 className="font-medium mb-1">Delete Workspace</h3>
+								<h3 className="mb-1 font-medium">Delete Workspace</h3>
 								<p className="text-sm text-gray-600 dark:text-gray-400">
-									Permanently delete this workspace and all its data. This action
-									cannot be undone.
+									Permanently delete this workspace and all its data. This action cannot be undone.
 								</p>
 							</div>
 							<Button
@@ -160,12 +146,11 @@ export function SettingsPageClient({
 							</Button>
 						</div>
 					) : (
-						<div className="flex items-center justify-between p-4 border border-red-200 dark:border-red-800 rounded-lg">
+						<div className="flex items-center justify-between rounded-lg border border-red-200 p-4 dark:border-red-800">
 							<div>
-								<h3 className="font-medium mb-1">Leave Workspace</h3>
+								<h3 className="mb-1 font-medium">Leave Workspace</h3>
 								<p className="text-sm text-gray-600 dark:text-gray-400">
-									Remove yourself from this workspace. You'll need a new invite
-									to rejoin.
+									Remove yourself from this workspace. You'll need a new invite to rejoin.
 								</p>
 							</div>
 							<Button
@@ -181,8 +166,8 @@ export function SettingsPageClient({
 
 					{!isOwner && !hasMultipleWorkspaces && (
 						<p className="text-sm text-gray-600 dark:text-gray-400">
-							You cannot leave this workspace as it's your only workspace. Create
-							or join another workspace first.
+							You cannot leave this workspace as it's your only workspace. Create or join another
+							workspace first.
 						</p>
 					)}
 				</div>
@@ -211,4 +196,3 @@ export function SettingsPageClient({
 		</div>
 	);
 }
-

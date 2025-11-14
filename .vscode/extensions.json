@@ -4,7 +4,9 @@
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		"bradlc.vscode-tailwindcss",
-		"tamasfe.even-better-toml"
+		"tamasfe.even-better-toml",
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": []

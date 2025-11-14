@@ -23,12 +23,7 @@ interface MemberListProps {
 	workspaceId: string;
 }
 
-export function MemberList({
-	members,
-	currentUserId,
-	isOwner,
-	workspaceId,
-}: MemberListProps) {
+export function MemberList({ members, currentUserId, isOwner, workspaceId }: MemberListProps) {
 	const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
 
 	async function handleRemoveMember(userId: string) {
@@ -48,20 +43,18 @@ export function MemberList({
 			{members.map((member) => (
 				<div
 					key={member.userId}
-					className="flex items-center justify-between p-4 border rounded-lg"
+					className="flex items-center justify-between rounded-lg border p-4"
 				>
 					<div className="flex items-center gap-3">
-						{getProxiedImageUrl(member.user?.image) ? (
+						{getProxiedImageUrl(member.userId) ? (
 							<img
-								src={getProxiedImageUrl(member.user?.image)!}
+								src={getProxiedImageUrl(member.userId)!}
 								alt={member.user?.name || "User"}
-								className="w-10 h-10 rounded-full"
+								className="h-10 w-10 rounded-full"
 							/>
 						) : (
-							<div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white">
-								<span className="text-lg font-medium">
-									{getUserInitials(member.user?.name)}
-								</span>
+							<div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+								<span className="text-lg font-medium">{getUserInitials(member.user?.name)}</span>
 							</div>
 						)}
 						<div>
@@ -72,12 +65,12 @@ export function MemberList({
 
 					<div className="flex items-center gap-2">
 						{member.role === "owner" ? (
-							<div className="flex items-center gap-1 px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-full text-sm">
+							<div className="flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
 								<Crown className="h-3 w-3" />
 								Owner
 							</div>
 						) : (
-							<span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm">
+							<span className="rounded-full bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
 								Member
 							</span>
 						)}
@@ -98,4 +91,3 @@ export function MemberList({
 		</div>
 	);
 }
-

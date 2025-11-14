@@ -194,7 +194,10 @@ export async function leaveWorkspace(workspaceId: string): Promise<UpdateWorkspa
 	}
 
 	if (workspace.role === "owner") {
-		return { success: false, error: "Owners cannot leave. Transfer ownership or delete the workspace." };
+		return {
+			success: false,
+			error: "Owners cannot leave. Transfer ownership or delete the workspace.",
+		};
 	}
 
 	try {
@@ -374,10 +377,7 @@ export async function removeMember(
 		await db
 			.delete(workspaceMembers)
 			.where(
-				and(
-					eq(workspaceMembers.workspaceId, workspaceId),
-					eq(workspaceMembers.userId, userId)
-				)
+				and(eq(workspaceMembers.workspaceId, workspaceId), eq(workspaceMembers.userId, userId))
 			);
 
 		revalidatePath("/dashboard/team");
@@ -387,4 +387,3 @@ export async function removeMember(
 		return { success: false, error: "Failed to remove member" };
 	}
 }
-

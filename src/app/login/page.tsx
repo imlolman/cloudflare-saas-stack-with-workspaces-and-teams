@@ -13,9 +13,9 @@ export default async function LoginPage() {
 	}
 
 	return (
-		<main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-			<div className="w-full max-w-md px-8 py-10 bg-white dark:bg-gray-950 rounded-2xl shadow-xl">
-				<div className="flex flex-col items-center mb-8">
+		<main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+			<div className="w-full max-w-md rounded-2xl bg-white px-8 py-10 shadow-xl dark:bg-gray-950">
+				<div className="mb-8 flex flex-col items-center">
 					<svg
 						viewBox="0 0 256 116"
 						xmlns="http://www.w3.org/2000/svg"
@@ -40,10 +40,8 @@ export default async function LoginPage() {
 							d="M205.544 48.863h-2.656c-.531 0-1.062.53-1.593 1.062l-3.718 12.747c-1.593 5.31-1.062 10.623 1.594 13.809 2.655 3.187 6.373 5.31 11.153 5.843l19.652 1.062c.53 0 1.062.53 1.593.53.53.532.53 1.063 0 1.594-.531 1.063-1.062 1.594-2.125 1.594l-20.182 1.062c-11.154.53-22.838 9.56-27.087 20.182l-1.063 4.78c-.531.532 0 1.594 1.063 1.594h70.108c1.062 0 1.593-.531 1.593-1.593 1.062-4.25 2.124-9.03 2.124-13.81 0-27.618-22.838-50.456-50.456-50.456"
 						/>
 					</svg>
-					<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-						Welcome Back
-					</h1>
-					<p className="text-gray-600 dark:text-gray-400 text-center">
+					<h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h1>
+					<p className="text-center text-gray-600 dark:text-gray-400">
 						Sign in to access your workspace
 					</p>
 				</div>
@@ -56,11 +54,7 @@ export default async function LoginPage() {
 					className="w-full"
 				>
 					<Button className="w-full" size="lg">
-						<svg
-							className="w-5 h-5 mr-2"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-						>
+						<svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 							<path
 								fill="currentColor"
 								d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -82,11 +76,10 @@ export default async function LoginPage() {
 					</Button>
 				</form>
 
-				<p className="mt-6 text-xs text-center text-gray-500 dark:text-gray-400">
+				<p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
 					By signing in, you agree to our Terms of Service and Privacy Policy
 				</p>
 			</div>
 		</main>
 	);
 }
-

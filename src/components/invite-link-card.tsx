@@ -44,12 +44,10 @@ export function InviteLinkCard({ invite, baseUrl }: InviteLinkCardProps) {
 	}
 
 	return (
-		<div className="flex items-center justify-between p-4 border rounded-lg">
-			<div className="flex-1 min-w-0 mr-4">
-				<p className="text-sm font-mono truncate text-gray-600 dark:text-gray-400">
-					{inviteUrl}
-				</p>
-				<p className="text-xs text-gray-500 mt-1">
+		<div className="flex items-center justify-between rounded-lg border p-4">
+			<div className="mr-4 min-w-0 flex-1">
+				<p className="truncate font-mono text-sm text-gray-600 dark:text-gray-400">{inviteUrl}</p>
+				<p className="mt-1 text-xs text-gray-500">
 					{isExpired ? (
 						<span className="text-red-500">Expired</span>
 					) : (
@@ -59,29 +57,14 @@ export function InviteLinkCard({ invite, baseUrl }: InviteLinkCardProps) {
 			</div>
 
 			<div className="flex items-center gap-2">
-				<Button
-					variant="outline"
-					size="icon"
-					onClick={handleCopy}
-					disabled={isExpired}
-				>
-					{copied ? (
-						<Check className="h-4 w-4 text-green-500" />
-					) : (
-						<Copy className="h-4 w-4" />
-					)}
+				<Button variant="outline" size="icon" onClick={handleCopy} disabled={isExpired}>
+					{copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
 				</Button>
 
-				<Button
-					variant="ghost"
-					size="icon"
-					onClick={handleRevoke}
-					disabled={isRevoking}
-				>
+				<Button variant="ghost" size="icon" onClick={handleRevoke} disabled={isRevoking}>
 					<Trash2 className="h-4 w-4 text-red-500" />
 				</Button>
 			</div>
 		</div>
 	);
 }
-

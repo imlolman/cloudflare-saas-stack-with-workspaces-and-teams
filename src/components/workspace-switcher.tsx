@@ -50,14 +50,12 @@ export function WorkspaceSwitcher({
 				onClick={() => setIsOpen(!isOpen)}
 				className="w-full justify-between"
 			>
-				<span className="truncate">
-					{currentWorkspace?.name || "Select Workspace"}
-				</span>
+				<span className="truncate">{currentWorkspace?.name || "Select Workspace"}</span>
 				<ChevronDown className="ml-2 h-4 w-4 shrink-0" />
 			</Button>
 
 			{isOpen && (
-				<div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-950 border rounded-lg shadow-lg z-50 overflow-hidden">
+				<div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-lg border bg-white shadow-lg dark:bg-gray-950">
 					<div className="p-2">
 						{workspaces.map((workspace) => (
 							<button
@@ -66,15 +64,13 @@ export function WorkspaceSwitcher({
 									onSelectWorkspace(workspace.id);
 									setIsOpen(false);
 								}}
-								className="flex items-center justify-between w-full px-3 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+								className="flex w-full items-center justify-between rounded px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
 							>
 								<div className="flex flex-col items-start">
 									<span className="font-medium">{workspace.name}</span>
 									<span className="text-xs text-gray-500">{workspace.role}</span>
 								</div>
-								{workspace.id === currentWorkspaceId && (
-									<Check className="h-4 w-4" />
-								)}
+								{workspace.id === currentWorkspaceId && <Check className="h-4 w-4" />}
 							</button>
 						))}
 					</div>
@@ -84,7 +80,7 @@ export function WorkspaceSwitcher({
 								onCreateWorkspace();
 								setIsOpen(false);
 							}}
-							className="flex items-center w-full px-3 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+							className="flex w-full items-center rounded px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
 						>
 							<Plus className="mr-2 h-4 w-4" />
 							Create Workspace
@@ -95,4 +91,3 @@ export function WorkspaceSwitcher({
 		</div>
 	);
 }
-

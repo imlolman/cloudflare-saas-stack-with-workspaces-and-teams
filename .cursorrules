@@ -60,7 +60,8 @@
   - Use transactions for multi-table operations.
   
   Image Handling
-  - Proxy external images through /api/image-proxy to avoid rate limits.
+  - Proxy external images through /api/image-proxy using userId (never pass URLs in query params).
+  - Image proxy fetches URLs from database to prevent abuse.
   
   Follow Next.js docs for Data Fetching, Rendering, and Routing.
   

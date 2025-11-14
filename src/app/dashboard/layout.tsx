@@ -8,11 +8,7 @@ import { getProxiedImageUrl, getUserInitials } from "@/lib/utils/get-proxied-ima
 
 export const runtime = "edge";
 
-export default async function DashboardLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const session = await auth();
 
 	if (!session?.user) {
@@ -24,9 +20,9 @@ export default async function DashboardLayout({
 	return (
 		<div className="flex min-h-screen">
 			{/* Sidebar */}
-			<aside className="w-64 border-r bg-gray-50 dark:bg-gray-900 flex flex-col">
+			<aside className="flex w-64 flex-col border-r bg-gray-50 dark:bg-gray-900">
 				<div className="p-6">
-					<div className="flex items-center gap-2 mb-6">
+					<div className="mb-6 flex items-center gap-2">
 						<svg
 							viewBox="0 0 256 116"
 							xmlns="http://www.w3.org/2000/svg"
@@ -56,28 +52,22 @@ export default async function DashboardLayout({
 				</div>
 
 				{/* User profile section at bottom */}
-				<div className="mt-auto p-4 border-t">
-					<div className="flex items-center gap-3 mb-3">
-						{getProxiedImageUrl(session.user.image) ? (
+				<div className="mt-auto border-t p-4">
+					<div className="mb-3 flex items-center gap-3">
+						{getProxiedImageUrl(session.user.id) ? (
 							<img
-								src={getProxiedImageUrl(session.user.image)!}
+								src={getProxiedImageUrl(session.user.id)!}
 								alt={session.user.name || "User"}
-								className="w-10 h-10 rounded-full"
+								className="h-10 w-10 rounded-full"
 							/>
 						) : (
-							<div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white">
-								<span className="text-lg font-medium">
-									{getUserInitials(session.user.name)}
-								</span>
+							<div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+								<span className="text-lg font-medium">{getUserInitials(session.user.name)}</span>
 							</div>
 						)}
-						<div className="flex-1 min-w-0">
-							<p className="text-sm font-medium truncate">
-								{session.user.name}
-							</p>
-							<p className="text-xs text-gray-500 truncate">
-								{session.user.email}
-							</p>
+						<div className="min-w-0 flex-1">
+							<p className="truncate text-sm font-medium">{session.user.name}</p>
+							<p className="truncate text-xs text-gray-500">{session.user.email}</p>
 						</div>
 					</div>
 					<form
@@ -101,4 +91,3 @@ export default async function DashboardLayout({
 		</div>
 	);
 }
-
