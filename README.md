@@ -36,8 +36,8 @@ Supermemory now has 20k+ users and it runs on $5/month. safe to say, it's _very_
 2. Clone the repository and install dependencies:
 
    ```bash
-   git clone https://github.com/imlolman/cloudflare-saas-stack-with-workspace
-   cd cloudflare-saas-stack-with-workspace
+   git clone https://github.com/imlolman/cloudflare-saas-stack-with-workspaces-and-teams
+   cd cloudflare-saas-stack-with-workspaces-and-teams
    npm i -g bun
    bun install
    bun run setup
@@ -53,7 +53,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## 🏗️ Project Structure
 
 ```
-cloudflare-saas-stack/
+cloudflare-saas-stack-with-workspaces-and-teams/
 ├── src/
 │   ├── app/
 │   │   ├── dashboard/          # Dashboard pages (protected)
@@ -173,7 +173,7 @@ bun run db:generate
 bun run db:migrate:dev
 
 # Or directly with Wrangler (recommended)
-wrangler d1 execute cloudflare-stack-test --local --file=./drizzle/0001_migration_name.sql
+wrangler d1 execute cloudflare-stack-test --local --file=./drizzle/0000_initial.sql
 ```
 
 **Production (Remote D1):**
@@ -183,7 +183,7 @@ wrangler d1 execute cloudflare-stack-test --local --file=./drizzle/0001_migratio
 bun run db:migrate:prod
 
 # Or directly with Wrangler
-wrangler d1 execute cloudflare-stack-test --remote --file=./drizzle/0001_migration_name.sql
+wrangler d1 execute cloudflare-stack-test --remote --file=./drizzle/0000_initial.sql
 ```
 
 ### Inspect Database
@@ -251,8 +251,8 @@ If you prefer manual setup:
       1. First create [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent). Tips: no wait time if you skip logo upload.
       2. Create [credential](https://console.cloud.google.com/apis/credentials). Put `https://your-domain` and `http://localhost:3000` at "Authorized JavaScript origins". Put `https://your-domain/api/auth/callback/google` and `http://localhost:3000/api/auth/callback/google` at "Authorized redirect URIs".
 4. Generate db migration files: `bun run db:generate`
-5. Run local migration: `bunx wrangler d1 execute ${dbName} --local --file=migrations/0000_setup.sql` or using drizzle `bun run db:migrate:dev`
-6. Run remote migration: `bunx wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql` or using drizzle `bun run db:migrate:prod`
+5. Run local migration: `bunx wrangler d1 execute ${dbName} --local --file=drizzle/0000_initial.sql` or using drizzle `bun run db:migrate:dev`
+6. Run remote migration: `bunx wrangler d1 execute ${dbName} --remote --file=drizzle/0000_initial.sql` or using drizzle `bun run db:migrate:prod`
 7. Start development server: `bun run dev`
 8. Deploy: `bun run deploy`
 
@@ -308,6 +308,8 @@ MIT License - feel free to use this for your own projects!
 ## 🙏 Credits
 
 Built on top of the amazing work by [Dhravya](https://github.com/Dhravya) and the Cloudflare team.
+
+Extended with workspaces and teams functionality by [Satyam](https://github.com/imlolman).
 
 ---
 

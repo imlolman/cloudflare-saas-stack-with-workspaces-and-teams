@@ -1,5 +1,5 @@
 {
-	"name": "cloudflare-saas-stack",
+	"name": "cloudflare-saas-stack-with-workspaces-and-teams",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
