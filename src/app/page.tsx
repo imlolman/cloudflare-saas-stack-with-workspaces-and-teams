@@ -4,11 +4,17 @@ import { auth, signIn, signOut } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { getThemeToggler } from "@/lib/theme/get-theme-button";
+import { redirect } from "next/navigation";
 
 export const runtime = "edge";
 
 export default async function Page() {
 	const session = await auth();
+
+	// Redirect authenticated users to dashboard
+	if (session?.user) {
+		redirect("/dashboard");
+	}
 
 	const userCount = await db
 		.select({
