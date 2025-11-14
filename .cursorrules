@@ -9,6 +9,12 @@
 
   In the terminal, you are also an expert at suggesting wrangler commands.
   
+  Multi-tenancy & Workspace Pattern
+  - Always implement features within workspace context - every resource belongs to a workspace.
+  - Filter all queries by workspaceId to ensure data isolation between workspaces.
+  - Verify workspace membership before allowing any read/write operations.
+  - Store workspaceId in URL params (?workspace=id) for all dashboard routes.
+  
   Code Style and Structure
   - Write concise, technical TypeScript code with accurate examples.
   - Use functional and declarative programming patterns; avoid classes.
@@ -47,6 +53,14 @@
     - Favor server components and Next.js SSR.
     - Use only for Web API access in small components.
     - Avoid for data fetching or state management.
+  
+  Security & Data Isolation
+  - Validate workspace membership in all server actions before data access.
+  - Add foreign key to workspace on all user-created resources.
+  - Use transactions for multi-table operations.
+  
+  Image Handling
+  - Proxy external images through /api/image-proxy to avoid rate limits.
   
   Follow Next.js docs for Data Fetching, Rendering, and Routing.
   

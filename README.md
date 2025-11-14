@@ -8,12 +8,23 @@ This is the same stack used to build [Supermemory.ai](https://Supermemory.ai) wh
 
 Supermemory now has 20k+ users and it runs on $5/month. safe to say, it's _very_ effective.
 
+## ✨ Features
+
+- 🔐 **Authentication** - Google OAuth with NextAuth v5
+- 👥 **Multi-tenancy** - Workspace & Team management with roles
+- 🎫 **Invite System** - Shareable invite links with expiration
+- 🎨 **Beautiful UI** - ShadcnUI components with dark mode
+- 🖼️ **Image Proxy** - Bypass rate limits for external images
+- 🚀 **Edge Runtime** - All routes optimized for Cloudflare Edge
+- 📦 **Type-safe** - Full TypeScript support throughout
+- ⚡ **Zero Config** - Environment variables via Cloudflare bindings
+
 ## The stack includes:
 
 - [Next.js](https://nextjs.org/) for frontend
 - [TailwindCSS](https://tailwindcss.com/) for styling
 - [Drizzle ORM](https://orm.drizzle.team/) for database access
-- [NextAuth](https://next-auth.js.org/) for authentication
+- [NextAuth v5](https://next-auth.js.org/) for authentication
 - [Cloudflare D1](https://www.cloudflare.com/developer-platform/d1/) for serverless databases
 - [Cloudflare Pages](https://pages.cloudflare.com/) for hosting
 - [ShadcnUI](https://shadcn.com/) as the component library
@@ -37,6 +48,86 @@ Supermemory now has 20k+ users and it runs on $5/month. safe to say, it's _very_
    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 🏗️ Project Structure
+
+```
+cloudflare-saas-stack/
+├── src/
+│   ├── app/
+│   │   ├── dashboard/          # Dashboard pages (protected)
+│   │   │   ├── page.tsx        # Overview with workspace list
+│   │   │   ├── team/           # Team management
+│   │   │   └── settings/       # Workspace settings
+│   │   ├── invite/[token]/     # Invite acceptance page
+│   │   ├── login/              # Login page
+│   │   └── api/
+│   │       ├── [...nextauth]/  # NextAuth endpoints
+│   │       └── image-proxy/    # Image proxy for external images
+│   ├── components/
+│   │   ├── ui/                 # ShadcnUI components
+│   │   ├── workspace-switcher.tsx
+│   │   ├── member-list.tsx
+│   │   └── invite-link-card.tsx
+│   ├── server/
+│   │   ├── auth.ts             # NextAuth configuration
+│   │   ├── actions/
+│   │   │   └── workspace.ts    # Server actions for workspaces
+│   │   └── db/
+│   │       ├── index.ts        # Database client
+│   │       └── schema.ts       # Drizzle schema
+│   ├── lib/
+│   │   └── utils/              # Utility functions
+│   └── middleware.ts           # Route protection
+├── drizzle/                    # Database migrations
+└── wrangler.toml              # Cloudflare configuration
+```
+
+## 🎯 Core Features Explained
+
+### Workspace & Team Management
+
+The kit includes a complete multi-tenancy system:
+
+- **Workspaces**: Isolated environments for different projects/teams
+- **Team Members**: Users can be part of multiple workspaces
+- **Roles**: Owner and Member roles with appropriate permissions
+- **Auto-creation**: New users automatically get a default workspace
+
+### Authentication Flow
+
+1. User signs in with Google OAuth
+2. System automatically creates a default workspace
+3. User is added as the workspace owner
+4. Redirected to dashboard with their workspace
+
+### Invite System
+
+- **Generate Links**: Workspace owners can create invite links
+- **Expiration**: Links expire after 7 days
+- **One-time Use**: Links are deleted after acceptance
+- **Access Control**: Only owners can invite members
+
+### Image Proxy
+
+Solves rate-limiting issues with external images (like Google profile photos):
+
+```typescript
+// Automatically proxies Google images
+/api/image-proxy?url=https://lh3.googleusercontent.com/...
+```
+
+### Database Schema
+
+```
+users → workspace_members → workspaces
+                          ↓
+                   workspace_invites
+```
+
+- **workspaces**: Workspace information
+- **workspace_members**: User-to-workspace relationships with roles
+- **workspace_invites**: Shareable invite tokens with expiration
 
 ## Cloudflare Integration
 
@@ -63,16 +154,64 @@ Quick explaination of D1 set up:
 - Local dev environment (`bun run dev`) interact with [local d1 session](https://developers.cloudflare.com/d1/build-with-d1/local-development/#start-a-local-development-session), which is based on some SQlite files located at `.wrangler/state/v3/d1`.
 - In dev mode (`bun run db:<migrate or studio>:dev`), Drizzle-kit (migrate and studio) directly modifies these files as regular SQlite db. While `bun run db:<migrate or studio>:prod` use d1-http driver to interact with remote d1 via rest api. Therefore we need to set env var at `.env.example`
 
-To generate migrations files:
-- `bun run db:generate`
+### Generate Migration Files
+```bash
+bun run db:generate
+```
 
-To apply database migrations:
-- For development: `bun run db:migrate:dev`
-- For production: `bun run db:migrate:prd`
+### Apply Database Migrations
 
-To inspect database:
-- For local database `bun run db:studio:dev`
-- For remote database `bun run db:studio:prod`
+**Development (Local D1):**
+```bash
+# Using Drizzle (may have issues with existing tables)
+bun run db:migrate:dev
+
+# Or directly with Wrangler (recommended)
+wrangler d1 execute cloudflare-stack-test --local --file=./drizzle/0001_migration_name.sql
+```
+
+**Production (Remote D1):**
+```bash
+# Using Drizzle
+bun run db:migrate:prod
+
+# Or directly with Wrangler
+wrangler d1 execute cloudflare-stack-test --remote --file=./drizzle/0001_migration_name.sql
+```
+
+### Inspect Database
+
+**Local database:**
+```bash
+bun run db:studio:dev
+```
+
+**Remote database:**
+```bash
+bun run db:studio:prod
+```
+
+## 🛠️ Development Commands
+
+```bash
+# Run dev server
+bun dev
+
+# Type checking
+npm run check
+
+# Linting
+npm run lint
+
+# Build for production
+bun run pages:build
+
+# Preview production build
+bun run preview
+
+# Deploy to Cloudflare Pages
+bun run deploy
+```
 
 ## Cloudflare R2 Bucket CORS / File Upload
 
@@ -118,12 +257,60 @@ If you prefer manual setup:
 7. Start development server: `bun run dev`
 8. Deploy: `bun run deploy`
 
-## The Beauty of This Stack
+## 🎨 Key Pages & Routes
 
-- Fully scalable and composable
-- No environment variables needed (use `env.DB`, `env.KV`, `env.Queue`, `env.AI`, etc.)
-- Powerful tools like Wrangler for database management and migrations
-- Cost-effective scaling (e.g., $5/month for multiple high-traffic projects)
+| Route | Description | Access |
+|-------|-------------|--------|
+| `/` | Landing page | Public |
+| `/login` | Google OAuth login | Public |
+| `/dashboard` | Workspace overview | Protected |
+| `/dashboard/team` | Team member management | Protected |
+| `/dashboard/settings` | Workspace settings | Protected |
+| `/invite/[token]` | Accept workspace invitation | Protected |
 
-Just change your Cloudflare account ID in the project settings, and you're good to go!
+## 🔐 Server Actions
+
+All workspace operations are handled via server actions (`src/server/actions/workspace.ts`):
+
+- `getWorkspaces()` - List user's workspaces
+- `getWorkspace(id)` - Get single workspace
+- `createWorkspace(name)` - Create new workspace
+- `updateWorkspace(id, name)` - Update workspace
+- `deleteWorkspace(id)` - Delete workspace (owner only)
+- `leaveWorkspace(id)` - Leave workspace (members only)
+- `generateInviteLink(id)` - Create invite link (owner only)
+- `acceptInvite(token)` - Join via invite
+- `revokeInvite(id)` - Delete invite link (owner only)
+- `removeMember(workspaceId, userId)` - Remove member (owner only)
+
+## 🚀 The Beauty of This Stack
+
+- **Fully scalable and composable** - Add features incrementally
+- **No environment variables needed** - Use Cloudflare bindings (`env.DB`, `env.KV`, etc.)
+- **Powerful CLI tools** - Wrangler for database, migrations, and deployment
+- **Cost-effective** - Run multiple high-traffic projects on $5/month
+- **Edge-first** - All routes optimized for Cloudflare Edge runtime
+- **Type-safe** - End-to-end TypeScript with Drizzle ORM
+- **Production-ready** - Workspace management, auth, and team features built-in
+
+## 🤝 Contributing
+
+Contributions are welcome! This is a starter template, so feel free to:
+
+- Add new features
+- Improve documentation
+- Report bugs
+- Suggest enhancements
+
+## 📝 License
+
+MIT License - feel free to use this for your own projects!
+
+## 🙏 Credits
+
+Built on top of the amazing work by [Dhravya](https://github.com/Dhravya) and the Cloudflare team.
+
+---
+
+**Ready to build your next SaaS?** Just change your Cloudflare account ID in the project settings, and you're good to go! 🚀
 
